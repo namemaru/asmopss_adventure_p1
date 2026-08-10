@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ASMOPSS Adventure V2 — ป.1</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#172033;--muted:#667085;--p:#5b5bd6;--p2:#7c6cff;--g:#13a38a;--y:#f5a623;--r:#e5484d;--line:#e6e8ef;--shadow:0 12px 35px rgba(20,30,60,.09)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans Thai",sans-serif}
+button{font:inherit;cursor:pointer;border:0}.app{max-width:1150px;margin:auto;padding:14px}
+header{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:12px 15px;display:flex;gap:12px;align-items:center;justify-content:space-between;box-shadow:var(--shadow);position:sticky;top:8px;z-index:10}.brand{display:flex;gap:10px;align-items:center;font-weight:950}.avatar{width:48px;height:48px;border-radius:16px;background:#eef0ff;display:grid;place-items:center;font-size:28px}
+.stats{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.pill{background:#f3f4ff;padding:7px 10px;border-radius:999px;font-weight:850;font-size:13px}
+nav{display:flex;gap:7px;overflow:auto;margin:14px 0}nav button,.ghost{background:#fff;border:1px solid var(--line);padding:10px 13px;border-radius:12px;font-weight:850;white-space:nowrap}nav button.active,.primary{background:var(--p);color:#fff;border-color:var(--p)}
+.view{display:none}.view.active{display:block}.hero{background:linear-gradient(135deg,var(--p),var(--g));color:#fff;border-radius:25px;padding:23px;box-shadow:var(--shadow);margin-bottom:15px}.hero h1{margin:0 0 7px;font-size:30px}.hero p{margin:0;opacity:.92}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:17px;box-shadow:var(--shadow)}.card h3{margin:0 0 8px}.muted{color:var(--muted)}
+.big{font-size:34px;font-weight:950}.subject{min-height:160px;display:flex;flex-direction:column;justify-content:space-between}.subject .icon{font-size:40px}.subject button,.primary{padding:10px 14px;border-radius:12px;font-weight:900}
+.map{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px}.week{position:relative;overflow:hidden}.week.locked{opacity:.5}.week .num{font-size:12px;font-weight:900;color:var(--p)}.stars{letter-spacing:2px}.tag{display:inline-block;background:#eef0ff;color:#4b4bb3;padding:5px 8px;border-radius:8px;font-size:12px;font-weight:900}
+.progress{height:9px;background:#eef0f4;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:var(--g)}.bar{display:flex;justify-content:space-between;margin:7px 0}
+.question{font-size:22px;font-weight:950;line-height:1.5;margin:18px 0}.choices{display:grid;gap:9px}.choice{background:#fff;border:2px solid var(--line);padding:13px;border-radius:14px;text-align:left;font-weight:850}.choice.correct{border-color:var(--g);background:#eafaf5}.choice.wrong{border-color:var(--r);background:#fff0f0}.feedback{margin-top:13px;padding:12px;border-radius:13px;font-weight:850}.ok{background:#eafaf5;color:#087f68}.no{background:#fff0f0;color:#b4232b}.actions{display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap;margin-top:15px}
+.reward{font-size:52px}.center{text-align:center}.skill{margin:12px 0}.badgeGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}.badgeCard{border:1px solid var(--line);border-radius:16px;padding:12px;text-align:center}.badgeCard.locked{opacity:.35;filter:grayscale(1)}
+.small{font-size:12px}.toast{position:fixed;right:15px;bottom:15px;background:#172033;color:#fff;padding:12px 15px;border-radius:14px;box-shadow:var(--shadow);display:none;z-index:30}
+table{width:100%;border-collapse:collapse}td,th{padding:9px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--muted);font-size:12px}
+@media(max-width:650px){.hero h1{font-size:24px}.question{font-size:19px}header{position:static}.stats{max-width:60%}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand"><div class="avatar" id="avatar">🧒</div><div><div>ASMOPSS Adventure</div><div class="small muted">ป.1 • Explorer Level <span id="level">1</span></div></div></div>
+  <div class="stats"><span class="pill">⭐ <b id="xp">0</b></span><span class="pill">🪙 <b id="coins">0</b></span><span class="pill">🔥 <b id="streak">0</b></span><span class="pill">🏆 <b id="trophies">0</b></span></div>
+</header>
+
+<nav>
+<button class="active" data-v="home">🏠 Home</button><button data-v="map">🗺️ World</button><button data-v="subjects">📚 Subjects</button><button data-v="badges">🏅 Badges</button><button data-v="parent">👨‍👩‍👧 Parent</button>
+</nav>
+
+<section id="home" class="view active">
+<div class="hero"><h1>🚀 พร้อมออกผจญภัยหรือยัง?</h1><p>ฝึกคิดแบบนักแก้โจทย์ — ตอบให้ถูก อธิบายให้ได้ และค่อยเพิ่มความเร็ว</p></div>
+<div class="grid">
+<div class="card"><div class="muted">Level</div><div class="big" id="homeLevel">1</div><div class="progress"><i id="levelBar" style="width:0%"></i></div><p class="small muted" id="levelText">0 / 100 XP</p></div>
+<div class="card"><div class="muted">Accuracy</div><div class="big" id="homeAcc">0%</div><p class="small muted">เป้าหมายการแข่งขัน ≥ 85%</p></div>
+<div class="card"><div class="muted">World Progress</div><div class="big" id="worldProgress">0/12</div><p class="small muted">12 ด่านใน MVP V2</p></div>
+</div>
+<div class="grid" style="margin-top:14px">
+<div class="card subject"><div><div class="icon">🔢</div><h3>Mathematics</h3><p class="muted">Number • Calculation • Pattern • Geometry</p></div><button class="primary" onclick="quick('Math')">เล่น 6 ข้อ</button></div>
+<div class="card subject"><div><div class="icon">🧠</div><h3>Logic</h3><p class="muted">Reasoning • Sequence • Deduction</p></div><button class="primary" onclick="quick('Logic')">เล่น 6 ข้อ</button></div>
+<div class="card subject"><div><div class="icon">🔬</div><h3>Science</h3><p class="muted">Observe • Predict • Classify</p></div><button class="primary" onclick="quick('Science')">เล่น 6 ข้อ</button></div>
+<div class="card subject"><div><div class="icon">🇬🇧</div><h3>English</h3><p class="muted">Vocabulary • Situations • Reading</p></div><button class="primary" onclick="quick('English')">เล่น 6 ข้อ</button></div>
+</div>
+</section>
+
+<section id="map" class="view">
+<div class="hero"><h1>🗺️ Learning World</h1><p>12 ด่าน — 4 สัปดาห์ × 3 ภารกิจ: Learn → Practice → Challenge</p></div>
+<div id="mapGrid" class="map"></div>
+</section>
+
+<section id="subjects" class="view">
+<div class="hero"><h1>📚 Skill Tree</h1><p>แต่ละวิชามีทักษะย่อย ระบบจะปรับระดับตามความแม่นยำ</p></div><div id="skillGrid" class="grid"></div>
+</section>
+
+<section id="badges" class="view">
+<div class="hero"><h1>🏅 Badge Gallery</h1><p>สะสมจากความสม่ำเสมอและคุณภาพการเรียน ไม่ใช่แค่ความเร็ว</p></div><div id="badgeGrid" class="badgeGrid"></div>
+</section>
+
+<section id="parent" class="view">
+<div class="hero"><h1>👨‍👩‍👧 Parent Dashboard</h1><p>ดูว่าเด็กเก่งอะไร และควรฝึกอะไรต่อ</p></div>
+<div class="grid"><div class="card"><div class="muted">XP</div><div class="big" id="pXP">0</div></div><div class="card"><div class="muted">Accuracy</div><div class="big" id="pAcc">0%</div></div><div class="card"><div class="muted">ตอบแล้ว</div><div class="big" id="pAns">0</div></div><div class="card"><div class="muted">ด่านผ่าน</div><div class="big" id="pLevels">0</div></div></div>
+<div class="card" style="margin-top:14px"><h3>🎯 Skill Mastery</h3><div id="skillReport"></div></div>
+<div class="card" style="margin-top:14px"><h3>🧭 คำแนะนำอัตโนมัติ</h3><div id="recommend"></div></div>
+<div class="card" style="margin-top:14px"><h3>❌ Error Log</h3><div id="errorLog"></div></div>
+<div class="actions"><button class="ghost" onclick="resetAll()">รีเซ็ตข้อมูล</button></div>
+</section>
+
+<section id="game" class="view">
+<div class="card"><div style="display:flex;justify-content:space-between;gap:10px"><div><span id="qtag" class="tag"></span><h2 id="qtitle"></h2></div><div class="pill"><span id="qnum"></span>/<span id="qtotal"></span></div></div>
+<div class="progress"><i id="qbar" style="width:0%"></i></div><div id="question" class="question"></div><div id="choices" class="choices"></div><div id="feedback"></div>
+<div class="actions"><button class="ghost" onclick="go('home')">ออก</button><button class="primary" id="next" style="display:none" onclick="nextQ()">ต่อไป →</button></div></div>
+</section>
+</div><div id="toast" class="toast"></div>
+
+<script>
+const Q=[
+{w:1,s:"Math",skill:"Number Sense",t:"Learn",q:"เลขใดมากกว่า 7?",a:["5","6","8","3"],c:2,e:"8 มากกว่า 7"},
+{w:1,s:"Math",skill:"Number Sense",t:"Learn",q:"เติม: 2, 3, 4, __, 6",a:["5","7","8","1"],c:0,e:"เพิ่มทีละ 1"},
+{w:1,s:"Logic",skill:"Classification",t:"Learn",q:"ข้อใดไม่เข้ากลุ่ม?",a:["แมว","สุนัข","ปลา","รถยนต์"],c:3,e:"รถยนต์ไม่ใช่สัตว์"},
+{w:1,s:"Science",skill:"Observation",t:"Learn",q:"ข้อใดเป็นการสังเกต?",a:["ฝนต้องตก","ใบไม้มีสีเขียว","ฉันชอบต้นไม้","พรุ่งนี้ร้อนแน่"],c:1,e:"เป็นข้อมูลที่มองเห็นได้"},
+{w:1,s:"English",skill:"Vocabulary",t:"Learn",q:"Which word is a color?",a:["Apple","Blue","Dog","Chair"],c:1,e:"Blue คือสี"},
+{w:1,s:"Logic",skill:"Sequence",t:"Practice",q:"ตื่นนอน → แปรงฟัน → ?",a:["นอน","ไปโรงเรียน","ดูดาว","เล่นน้ำ"],c:1,e:"เป็นลำดับกิจวัตรตอนเช้า"},
+
+{w:2,s:"Math",skill:"Calculation",t:"Learn",q:"6 + 3 = ?",a:["8","9","10","7"],c:1,e:"6 + 3 = 9"},
+{w:2,s:"Math",skill:"Calculation",t:"Practice",q:"__ + 4 = 9",a:["3","4","5","6"],c:2,e:"5 + 4 = 9"},
+{w:2,s:"Logic",skill:"Pattern",t:"Learn",q:"1, 3, 5, 7, __",a:["8","9","10","11"],c:1,e:"เพิ่มทีละ 2"},
+{w:2,s:"Science",skill:"Classification",t:"Practice",q:"ข้อใดเป็นสัตว์?",a:["ต้นไม้","แมว","โต๊ะ","แก้วน้ำ"],c:1,e:"แมวเป็นสัตว์"},
+{w:2,s:"English",skill:"Situational English",t:"Practice",q:"“Where is my pencil?”",a:["It is on the desk.","I am hungry.","Good night.","I am a cat."],c:0,e:"คำตอบต้องบอกตำแหน่ง"},
+{w:2,s:"Logic",skill:"Logic",t:"Challenge",q:"ข้อใดต่างจากข้ออื่น?",a:["วงกลม","สามเหลี่ยม","สี่เหลี่ยม","กล้วย"],c:3,e:"สามข้อแรกเป็นรูปทรง"},
+
+{w:3,s:"Math",skill:"Calculation",t:"Learn",q:"10 − 4 = ?",a:["5","6","7","8"],c:1,e:"10 − 4 = 6"},
+{w:3,s:"Math",skill:"Word Problem",t:"Practice",q:"มีลูกบอล 7 ลูก ให้เพื่อนไป 2 ลูก เหลือเท่าไร?",a:["4","5","6","9"],c:1,e:"7 − 2 = 5"},
+{w:3,s:"Logic",skill:"Deduction",t:"Practice",q:"A สูงกว่า B และ B สูงกว่า C ใครเตี้ยที่สุด?",a:["A","B","C","เท่ากัน"],c:2,e:"C เตี้ยที่สุด"},
+{w:3,s:"Science",skill:"Force",t:"Learn",q:"การผลักรถของเล่นทำให้รถ...",a:["เคลื่อนที่","หายไป","โตขึ้น","กลายเป็นน้ำ"],c:0,e:"แรงผลักทำให้วัตถุเคลื่อนที่"},
+{w:3,s:"English",skill:"Vocabulary",t:"Practice",q:"Which animal says “meow”?",a:["Dog","Cat","Cow","Bird"],c:1,e:"Cat = แมว"},
+{w:3,s:"Science",skill:"Materials",t:"Challenge",q:"ข้อใดมักทำจากแก้ว?",a:["หน้าต่าง","หมอน","รองเท้า","ผ้า"],c:0,e:"หน้าต่างบางชนิดทำจากแก้ว"},
+
+{w:4,s:"Math",skill:"Geometry",t:"Learn",q:"รูปใดมี 3 ด้าน?",a:["วงกลม","สามเหลี่ยม","สี่เหลี่ยม","วงรี"],c:1,e:"สามเหลี่ยมมี 3 ด้าน"},
+{w:4,s:"Math",skill:"Measurement",t:"Practice",q:"สิ่งใดน่าจะยาวที่สุด?",a:["ยางลบ","ดินสอ","โต๊ะเรียน","ลูกปัด"],c:2,e:"โต๊ะเรียนโดยทั่วไปยาวกว่า"},
+{w:4,s:"Logic",skill:"Counting",t:"Challenge",q:"เด็ก 3 คนมีลูกโป่งคนละ 2 ลูก รวมกี่ลูก?",a:["5","6","7","8"],c:1,e:"2 + 2 + 2 = 6"},
+{w:4,s:"Science",skill:"Prediction",t:"Learn",q:"น้ำแข็งวางไว้ในที่อุ่น คาดว่า...",a:["ละลาย","แข็งขึ้น","โตขึ้น","หายไปทันที"],c:0,e:"ความร้อนทำให้น้ำแข็งละลาย"},
+{w:4,s:"English",skill:"Situational English",t:"Practice",q:"“Can I borrow your pencil?”",a:["Sure. Here you are.","I am ten.","It is a dog.","Good night."],c:0,e:"เป็นคำตอบรับคำขอยืม"},
+{w:4,s:"English",skill:"Reading",t:"Challenge",q:"Tom has a red ball. What does Tom have?",a:["A blue car","A red ball","A green book","A cat"],c:1,e:"Tom มีลูกบอลสีแดง"}
+];
+
+const badges=[
+["🌱","First Step","ตอบคำถามแรก",s=>s.answered>=1],
+["🎯","Accurate","Accuracy ≥ 80%",s=>s.answered>=5&&s.correct/s.answered>=.8],
+["🔥","Streak 5","ตอบถูก 5 ข้อติดต่อกัน",s=>s.bestStreak>=5],
+["🗺️","Explorer","ผ่าน 4 ด่าน",s=>s.completed>=4],
+["🧠","Thinker","Logic mastery ≥ 80%",s=>mastery("Logic")>=80],
+["🔢","Math Star","Math mastery ≥ 80%",s=>subjectMastery("Math")>=80],
+["🔬","Young Scientist","Science mastery ≥ 80%",s=>subjectMastery("Science")>=80],
+["🇬🇧","English Explorer","English mastery ≥ 80%",s=>subjectMastery("English")>=80],
+["🏆","Challenge Ready","ผ่าน Challenge 4 สัปดาห์",s=>s.challengeWins>=4]
+];
+
+let S=JSON.parse(localStorage.getItem("asmopssV2")||"null")||{xp:0,coins:0,answered:0,correct:0,streak:0,bestStreak:0,completed:0,challengeWins:0,unlocked:1,done:[],skills:{},errors:[],avatar:"🧒"};
+let G={items:[],i:0,score:0};
+
+function save(){localStorage.setItem("asmopssV2",JSON.stringify(S));renderAll()}
+function go(id){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.v===id));renderAll()}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function level(){return Math.floor(S.xp/100)+1}
+function mastery(k){let x=S.skills[k];return x?Math.round(x.c/x.t*100):0}
+function subjectMastery(sub){let a=Q.filter(q=>q.s===sub),x=0,t=0;a.forEach(q=>{let z=S.skills[q.skill];if(z){x+=z.c;t+=z.t}});return t?Math.round(x/t*100):0}
+function quick(sub){G={items:shuffle(Q.filter(q=>q.s===sub)).slice(0,6),i:0,score:0};go("game");renderQ()}
+function startWeek(w,t){
+ if(w>S.unlocked){toast("🔒 ทำด่านก่อนหน้าให้ได้อย่างน้อย 60%");return}
+ let pool=Q.filter(q=>q.w===w&&(t==="All"||q.t===t));if(pool.length<4)pool=Q.filter(q=>q.w===w);
+ G={items:shuffle(pool).slice(0,6),i:0,score:0};go("game");renderQ()
+}
+function renderQ(){
+ let q=G.items[G.i];document.getElementById("qtag").textContent=`Week ${q.w} • ${q.s} • ${q.t}`;
+ document.getElementById("qtitle").textContent=q.skill;document.getElementById("qnum").textContent=G.i+1;document.getElementById("qtotal").textContent=G.items.length;
+ document.getElementById("qbar").style.width=(G.i/G.items.length*100)+"%";document.getElementById("question").textContent=q.q;document.getElementById("feedback").innerHTML="";document.getElementById("next").style.display="none";
+ let box=document.getElementById("choices");box.innerHTML="";q.a.forEach((a,i)=>{let b=document.createElement("button");b.className="choice";b.textContent=a;b.onclick=()=>answer(i,b);box.appendChild(b)})
+}
+function answer(i,btn){
+ let q=G.items[G.i];if(window.__answered)return;window.__answered=true;
+ let ok=i===q.c;document.querySelectorAll(".choice").forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add("correct")});if(!ok)btn.classList.add("wrong");
+ S.answered++;if(ok){S.correct++;S.streak++;S.bestStreak=Math.max(S.bestStreak,S.streak);S.xp+=12;S.coins+=3;G.score++}else{S.streak=0;S.xp+=2;S.errors.unshift({w:q.w,s:q.s,skill:q.skill,q:q.q});S.errors=S.errors.slice(0,20)}
+ S.skills[q.skill]??={c:0,t:0};S.skills[q.skill].t++;if(ok)S.skills[q.skill].c++;
+ document.getElementById("feedback").innerHTML=`<div class="feedback ${ok?"ok":"no"}>${ok?"🎉 ถูกต้อง! +12 XP":"💡 ยังไม่ถูก"}<br><span class="small">${q.e}</span></div>`;
+ document.getElementById("next").style.display="inline-block";save();checkBadges();
+}
+function nextQ(){window.__answered=false;if(G.i<G.items.length-1){G.i++;renderQ()}else finish()}
+function finish(){
+ let pct=Math.round(G.score/G.items.length*100),w=G.items[0]?.w;
+ if(w&&pct>=60&&!S.done.includes(w)){S.done.push(w);S.completed=S.done.length;if(w===S.unlocked)S.unlocked=Math.min(4,S.unlocked+1)}
+ if(w&&pct>=60&&G.items.some(x=>x.t==="Challenge"))S.challengeWins++;
+ S.xp+=pct>=80?25:10;if(pct>=80)S.coins+=8;save();
+ document.getElementById("game").innerHTML=`<div class="card center"><div class="reward">${pct>=80?"🏆":"🎯"}</div><h1>ภารกิจสำเร็จ!</h1><div class="big">${pct}%</div><p>ถูก ${G.score}/${G.items.length} ข้อ</p><p>${pct>=80?"ยอดเยี่ยม! ได้โบนัส XP และเหรียญ":"เกือบแล้ว — กลับมาลองอีกครั้งเพื่อทำ mastery ให้สูงขึ้น"}</p><div class="actions"><button class="ghost" onclick="go('home')">Home</button><button class="primary" onclick="go('map')">World Map</button></div></div>`;
+}
+function renderMap(){
+ let box=document.getElementById("mapGrid");box.innerHTML="";
+ for(let w=1;w<=4;w++){let lock=w>S.unlocked,done=S.done.includes(w),star=done?"⭐⭐⭐":"☆☆☆";
+ let d=document.createElement("div");d.className="card week"+(lock?" locked":"");d.innerHTML=`<div class="num">WORLD ${w}</div><h3>${lock?"🔒":"🗺️"} Week ${w}</h3><div class="stars">${star}</div><p class="muted">${["Numbers & Observation","Calculation & Pattern","Problem Solving & Force","Geometry & Prediction"][w-1]}</p><div class="grid" style="grid-template-columns:1fr 1fr 1fr"><button class="ghost" ${lock?"disabled":`onclick="startWeek(${w},'Learn')"`}>📘 Learn</button><button class="ghost" ${lock?"disabled":`onclick="startWeek(${w},'Practice')"`}>🎮 Practice</button><button class="primary" ${lock?"disabled":`onclick="startWeek(${w},'Challenge')"`}>⚡ Challenge</button></div>`;
+ box.appendChild(d)}
+}
+function renderSubjects(){
+ let box=document.getElementById("skillGrid");box.innerHTML="";
+ ["Math","Logic","Science","English"].forEach(sub=>{let p=subjectMastery(sub),icon={Math:"🔢",Logic:"🧠",Science:"🔬",English:"🇬🇧"}[sub];box.innerHTML+=`<div class="card"><div style="font-size:35px">${icon}</div><h3>${sub}</h3><div class="bar"><b>Mastery</b><b>${p}%</b></div><div class="progress"><i style="width:${p}%"></i></div><button class="primary" style="margin-top:12px;width:100%" onclick="quick('${sub}')">Practice</button></div>`})
+}
+function renderBadges(){let b=document.getElementById("badgeGrid");b.innerHTML="";badges.forEach(x=>{let ok=x[3](S);b.innerHTML+=`<div class="badgeCard ${ok?"":"locked"}"><div style="font-size:38px">${x[0]}</div><b>${x[1]}</b><div class="small muted">${x[2]}</div></div>`})}
+function renderParent(){
+ document.getElementById("pXP").textContent=S.xp;document.getElementById("pAcc").textContent=(S.answered?Math.round(S.correct/S.answered*100):0)+"%";document.getElementById("pAns").textContent=S.answered;document.getElementById("pLevels").textContent=S.completed;
+ let r=document.getElementById("skillReport");r.innerHTML="";let ks=Object.keys(S.skills);if(!ks.length)r.innerHTML="<p class='muted'>ยังไม่มีข้อมูล</p>";
+ ks.forEach(k=>{let p=mastery(k);r.innerHTML+=`<div class="skill"><div class="bar"><b>${k}</b><span>${p}%</span></div><div class="progress"><i style="width:${p}%"></i></div></div>`});
+ let scores=["Math","Logic","Science","English"].map(x=>[x,subjectMastery(x)]).sort((a,b)=>a[1]-b[1]);let weak=scores[0];
+ document.getElementById("recommend").innerHTML=`<p>🎯 ควรฝึกเพิ่ม: <b>${weak[0]}</b> (${weak[1]}%)</p><p class="muted">เกณฑ์แนะนำ: ต่ำกว่า 70% = Foundation, 70–84% = Practice, ≥85% = Challenge</p>`;
+ let e=document.getElementById("errorLog");e.innerHTML=S.errors.length?S.errors.slice(0,8).map(x=>`<p><b>W${x.w} • ${x.s} • ${x.skill}</b><br>${x.q}</p>`).join(""):"<p class='muted'>ยังไม่มี error log</p>";
+}
+function renderAll(){
+ let lv=level();document.getElementById("xp").textContent=S.xp;document.getElementById("coins").textContent=S.coins;document.getElementById("streak").textContent=S.streak;document.getElementById("trophies").textContent=badges.filter(b=>b[3](S)).length;document.getElementById("level").textContent=lv;document.getElementById("avatar").textContent=S.avatar;
+ document.getElementById("homeLevel").textContent=lv;document.getElementById("levelBar").style.width=(S.xp%100)+"%";document.getElementById("levelText").textContent=`${S.xp%100} / 100 XP ถึง Level ${lv+1}`;
+ document.getElementById("homeAcc").textContent=(S.answered?Math.round(S.correct/S.answered*100):0)+"%";document.getElementById("worldProgress").textContent=`${S.completed}/4`;
+ renderMap();renderSubjects();renderBadges();renderParent()
+}
+function checkBadges(){let n=badges.filter(b=>b[3](S)).length; if(n>Number(localStorage.getItem("badgeCount")||0)){localStorage.setItem("badgeCount",n);toast("🏅 ปลดล็อก Badge ใหม่!")}}
+function toast(t){let x=document.getElementById("toast");x.textContent=t;x.style.display="block";setTimeout(()=>x.style.display="none",2200)}
+function resetAll(){if(confirm("ลบความก้าวหน้าทั้งหมด?")){localStorage.removeItem("asmopssV2");localStorage.removeItem("badgeCount");location.reload()}}
+renderAll();
+</script>
+</body></html>
